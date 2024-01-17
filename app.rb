@@ -8,16 +8,15 @@ get '/' do
 end
 
 
-
- 
-post '/callback' do
-    def client
+ def client
         @client ||= Line::Bot::Client.new { |config|
           config.channel_secret = "a9a7928fd25356ca14b0e0aa05b6568c"
           config.channel_token = "uOSv2yphg2AkqPJOKJd6et3jVEA+YTwlKUflGvCikdDW3T81UBiOtsnkfGfmZps4uoaL2HPn4yha2CnidLe8cTHv1xLINVqDAVlBWcUqIof98V/SFHG5ShXxTxrd2/lXhypHaUfMsm2AXeZTtDCWUAdB04t89/1O/w1cDnyilFU="
         }
-    　　end
-　　end
+end
+ 
+post '/callback' do
+    p "ok"
     body = request.body.read
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
@@ -26,13 +25,14 @@ post '/callback' do
     events = client.parse_events_from(body)
 
     events.each do |event|
+  
       case event
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: event.message['text']
+            text: 'あ'
           }
         end
       end
@@ -41,7 +41,6 @@ post '/callback' do
     head :ok
 end
 
-end
 
 # LINE Developers登録完了後に作成される環境変数の認証
  
