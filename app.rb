@@ -40,7 +40,7 @@ post '/callback' do
     head :ok
 end
 
-
+end
 
 # LINE Developers登録完了後に作成される環境変数の認証
  
