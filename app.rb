@@ -25,12 +25,7 @@ post '/callback' do
     events = client.parse_events_from(body)
 　　client2 = OpenAI::Client.new(access_token: "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")
 
-   response2 = client2.chat(
-    parameters: {
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content:  event.message['text']+"以前の文を英語に訳してください" }],
-    })
-   puts response2.dig("choices", 0, "message", "content")
+  
     events.each do |event|
   
       case event
@@ -41,6 +36,12 @@ post '/callback' do
             type: 'text',
             text: response2.dig("choices", 0, "message", "content")
           }
+           response2 = client2.chat(
+            parameters: {
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content:  event.message['text']+"以前の文を英語に訳してください" }],
+    })
+   p response2.dig("choices", 0, "message", "content")
         end
       end
       client.reply_message(event['replyToken'], message)
