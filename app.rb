@@ -23,8 +23,7 @@ post '/callback' do
       error 400 do 'Bad Request' end
     end
     events = client.parse_events_from(body)
-　　client2 = OpenAI::Client.new(access_token: "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")
-
+　　
   
     events.each do |event|
   
@@ -36,6 +35,8 @@ post '/callback' do
             type: 'text',
             text: response2.dig("choices", 0, "message", "content")
           }
+          client2 = OpenAI::Client.new(access_token:"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")
+
            response2 = client2.chat(
             parameters: {
             model: "gpt-3.5-turbo",
