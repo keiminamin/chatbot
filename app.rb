@@ -32,7 +32,7 @@ post '/callback' do
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: 'あ'
+            text: event.message['text'] 
           }
         end
       end
