@@ -26,7 +26,7 @@ post '/callback' do
 　　
   
     events.each do |event|
-  
+      client2 = OpenAI::Client.new(access_token:"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")
       case event
       when Line::Bot::Event::Message
         case event.type
@@ -35,7 +35,7 @@ post '/callback' do
             type: 'text',
             text: response2.dig("choices", 0, "message", "content")
           }
-          client2 = OpenAI::Client.new(access_token:"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")
+      
 
            response2 = client2.chat(
             parameters: {
