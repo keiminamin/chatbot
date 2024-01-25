@@ -40,7 +40,7 @@ post '/callback' do
           response2 = client2.chat(
             parameters: {
               model: "gpt-3.5-turbo",
-              messages: [{ role: "user", content: event.message['text'] + "以前の文を英語に訳してください" }],
+              messages: [{ role: "user", content: event.message['text'] + "という単語を英語にしてください" }],
             }
           )
           p response2.dig("choices", 0, "message", "content")
