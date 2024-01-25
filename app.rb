@@ -4,6 +4,8 @@ require 'sinatra/reloader' if development?
 require './models.rb'
 require 'line/bot'
 require 'openai'
+require 'dotenv'
+Dotenv.load
 get '/' do
   erb :index
 end
@@ -30,7 +32,7 @@ post '/callback' do
     events = client.parse_events_from(body)
     events.each do |event|
     p "hello"
-   client2 = OpenAI::Client.new(access_token: "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")
+   client2 = OpenAI::Client.new(access_token: ENV["OPENAI_ACCESS_TOKEN"])
       case event
       when Line::Bot::Event::Message
         case event.type
