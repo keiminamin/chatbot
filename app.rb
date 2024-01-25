@@ -30,7 +30,7 @@ post '/callback' do
     events = client.parse_events_from(body)
     events.each do |event|
     p "hello"
-   client2 = OpenAI::Client.new(access_token: "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")
+   client2 = OpenAI::Client.new(access_token: "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")
       case event
       when Line::Bot::Event::Message
         case event.type
