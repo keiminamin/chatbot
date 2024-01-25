@@ -25,24 +25,24 @@ post '/callback' do
     events = client.parse_events_from(body)
 　　
   
-    events.each do |event|
-      client2 = OpenAI::Client.new(access_token:"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")
-      case event
+   events.each do |event|
+  client2 = OpenAI::Client.new(access_token: "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")
+    case event
       when Line::Bot::Event::Message
-        case event.type
-        when Line::Bot::Event::MessageType::Text
-          message = {
+       case event.type
+         when Line::Bot::Event::MessageType::Text
+         message = {
             type: 'text',
             text: response2.dig("choices", 0, "message", "content")
-          }
-      
+           }
+
 
            response2 = client2.chat(
             parameters: {
             model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content:  event.message['text']+"以前の文を英語に訳してください" }],
-    })
-   p response2.dig("choices", 0, "message", "content")
+            messages: [{ role: "user", content: event.message['text']+"以前の文を英語に訳してください" }],
+           })
+          p response2.dig("choices", 0, "message", "content")
         end
       end
       client.reply_message(event['replyToken'], message)
