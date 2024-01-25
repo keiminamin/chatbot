@@ -3,6 +3,7 @@ Bundler.require
 require 'sinatra/reloader' if development?
 require './models.rb'
 require 'line/bot'
+require 'openai'
 get '/' do
   erb :index
 end
@@ -24,27 +25,29 @@ post '/callback' do
     end
     events = client.parse_events_from(body)
 　　
-  events.each do |event|
-  client2 = OpenAI::Client.new(access_token: "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")
-  case event
-  when Line::Bot::Event::Message
-    case event.type
-    when Line::Bot::Event::MessageType::Text
-      response2 = client2.chat(
-        parameters: {
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: event.message['text'] + "以前の文を英語に訳してください" }],
-        }
-      )
-      p response2.dig("choices", 0, "message", "content")
-      
-      message = {
-        type: 'text',
-        text: response2.dig("choices", 0, "message", "content")
-      }
-    end
+    events.each do |event|
+    client2 = OpenAI::Client.new(access_token: "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")
+      case event
+      when Line::Bot::Event::Message
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          response2 = client2.chat(
+            parameters: {
+              model: "gpt-3.5-turbo",
+              messages: [{ role: "user", content: event.message['text'] + "以前の文を英語に訳してください" }],
+            }
+          )
+          p response2.dig("choices", 0, "message", "content")
+          
+          message = {
+            type: 'text',
+            text: response2.dig("choices", 0, "message", "content")
+          }
+        end
+      end
+    client.reply_message(event['replyToken'], message)
   end
-  client.reply_message(event['replyToken'], message)
+    head :ok
 end
 
 
