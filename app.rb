@@ -19,13 +19,15 @@ end
 post '/callback' do
     p "ok"
     body = request.body.read
+    p "ok"
     signature = request.env['HTTP_X_LINE_SIGNATURE']
+    p "ok"
     unless client.validate_signature(body, signature)
       p "error"
       error 400 do 'Bad Request' end
     end
+    p "ok"
     events = client.parse_events_from(body)
-　　
     events.each do |event|
     p "hello"
     client2 = OpenAI::Client.new(access_token: "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")
@@ -40,7 +42,6 @@ post '/callback' do
             }
           )
           p response2.dig("choices", 0, "message", "content")
-          
           message = {
             type: 'text',
             text: response2.dig("choices", 0, "message", "content")
@@ -49,7 +50,7 @@ post '/callback' do
       end
     client.reply_message(event['replyToken'], message)
   end
-    head :ok
+    
 end
 
 
