@@ -6,6 +6,13 @@ require 'line/bot'
 require 'openai'
 require 'dotenv'
 Dotenv.load
+
+before do
+  p 'before'
+  if Language.all.size == 0
+    Language.create(language: 0)
+  end
+end
 get '/' do
   erb :index
 end
@@ -37,17 +44,29 @@ post '/callback' do
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          response2 = client2.chat(
-            parameters: {
-              model: "gpt-3.5-turbo",
-              messages: [{ role: "user", content: event.message['text'] + "という単語を英語にしてください" }],
+          if event.message['text'].include?('変更')
+            language = event.message['text'] - '変更'
+            lang =  Language.first
+            lang.language = language
+            lang.save!
+            message = {
+              type: 'text',
+              text: '言語を'+language+'に変更しました'
             }
-          )
-          p response2.dig("choices", 0, "message", "content")
-          message = {
-            type: 'text',
-            text: response2.dig("choices", 0, "message", "content")
-          }
+          else 
+      
+            response2 = client2.chat(
+              parameters: {
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: event.message['text'] + "という単語を"+Language.first.language+"にしてください" }],
+              }
+            )
+            p response2.dig("choices", 0, "message", "content")
+            message = {
+              type: 'text',
+              text: response2.dig("choices", 0, "message", "content")
+            }
+          end
         end
       end
     client.reply_message(event['replyToken'], message)
