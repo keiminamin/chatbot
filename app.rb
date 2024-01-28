@@ -45,7 +45,7 @@ post '/callback' do
         case event.type
         when Line::Bot::Event::MessageType::Text
           if event.message['text'].include?('変更')
-            language = event.message['text'] - '変更'
+            language = event.message['text'].gsub('変更', '')
             lang =  Language.first
             lang.language = language
             lang.save!
