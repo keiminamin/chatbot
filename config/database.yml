@@ -8,3 +8,7 @@ development:
 
 production:
   <<: *default
+  host: dpg-cmqv5cq1hbls73fm8eq0-a
+  database: s_chatbot
+  username: s_chatbot_user
+  password: GCqKtoarLJmJ0HzCXTBNLJFnQdxaEmp1
